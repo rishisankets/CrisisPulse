@@ -92,10 +92,10 @@ class AnalyticsEngine:
                     float(v.reliefweb_response_count)
                 ]
                 for v in feature_vectors
-            ])
+            ], dtype=np.float64)
 
             scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X)
+            X_scaled = scaler.fit_transform(X)  # type: ignore[arg-type]
 
             # Contamination set to ~15-20% outlier rate
             clf = IsolationForest(contamination=0.2, random_state=42)
@@ -106,7 +106,7 @@ class AnalyticsEngine:
             logger.warning(f"Anomaly detection fallback to heuristic due to: {e}")
             # Heuristic fallback: outlier if volume_ratio > 1.8 or tone_volatility > 3.0
             return {
-                v.region: bool(v.volume_ratio > 1.8 or v.tone_volatility > 3.0)
+                v.region: (v.volume_ratio > 1.8 or v.tone_volatility > 3.0)
                 for v in feature_vectors
             }
 
