@@ -1,0 +1,2 @@
+python-interpreter-path = "backend/venv/bin/python3"
+search-path = ["backend", "."]
