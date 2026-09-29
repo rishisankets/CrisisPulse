@@ -106,7 +106,7 @@ class AnalyticsEngine:
             logger.warning(f"Anomaly detection fallback to heuristic due to: {e}")
             # Heuristic fallback: outlier if volume_ratio > 1.8 or tone_volatility > 3.0
             return {
-                v.region: (v.volume_ratio > 1.8 or v.tone_volatility > 3.0)
+                v.region: bool(v.volume_ratio > 1.8 or v.tone_volatility > 3.0)
                 for v in feature_vectors
             }
 
