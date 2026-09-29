@@ -287,5 +287,294 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
             }
         ],
         "reliefweb_response_count": 31
+    },
+    {
+        "region": "Ethiopia",
+        "country_code": "ET",
+        "lat": 9.1450,
+        "lon": 40.4897,
+        "gdelt_sample_headlines": [
+            "Food distribution resumes in Amhara and Tigray amidst fragile ceasefire",
+            "Clashes in Oromia region displace thousands of farming families",
+            "Severe malnutrition survey indicates alarming thresholds in Somali regional state"
+        ],
+        "tone_range": (-6.5, -2.8),
+        "event_volume_24h": 290,
+        "event_volume_7d": 1820,
+        "reliefweb_reports": [{"id": "rw-et-01", "title": "Ethiopia Humanitarian Situation Update", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/eth"}],
+        "reliefweb_response_count": 34
+    },
+    {
+        "region": "South Sudan",
+        "country_code": "SS",
+        "lat": 6.8770,
+        "lon": 31.3070,
+        "gdelt_sample_headlines": [
+            "Unprecedented seasonal flooding cuts off entire counties in Unity and Jonglei states",
+            "Returnees fleeing Sudan war strain border transit center resources",
+            "Cholera outbreak declared in Upper Nile state transit hubs"
+        ],
+        "tone_range": (-7.4, -3.5),
+        "event_volume_24h": 230,
+        "event_volume_7d": 1390,
+        "reliefweb_reports": [{"id": "rw-ss-01", "title": "South Sudan Crisis Response", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/ssd"}],
+        "reliefweb_response_count": 28
+    },
+    {
+        "region": "Burkina Faso",
+        "country_code": "BF",
+        "lat": 12.2383,
+        "lon": -1.5616,
+        "gdelt_sample_headlines": [
+            "Blockaded northern towns face critical shortages of staple foods and medicine",
+            "Security forces clash with armed groups in Sahel and Centre-Nord regions",
+            "Aid airdrops provide temporary sustenance to isolated communities"
+        ],
+        "tone_range": (-8.1, -4.0),
+        "event_volume_24h": 310,
+        "event_volume_7d": 1640,
+        "reliefweb_reports": [{"id": "rw-bf-01", "title": "Burkina Faso Humanitarian Emergency", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/bfa"}],
+        "reliefweb_response_count": 19
+    },
+    {
+        "region": "Mali",
+        "country_code": "ML",
+        "lat": 17.5707,
+        "lon": -3.9962,
+        "gdelt_sample_headlines": [
+            "Heavy clashes reported in northern Kidal and Gao sectors",
+            "Drone strikes hit militant convoys near Niger border",
+            "Fuel shortages disrupt humanitarian transport operations across Mopti"
+        ],
+        "tone_range": (-7.2, -3.1),
+        "event_volume_24h": 260,
+        "event_volume_7d": 1510,
+        "reliefweb_reports": [{"id": "rw-ml-01", "title": "Mali Situation Report", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/mli"}],
+        "reliefweb_response_count": 22
+    },
+    {
+        "region": "Niger",
+        "country_code": "NE",
+        "lat": 17.6078,
+        "lon": 8.0817,
+        "gdelt_sample_headlines": [
+            "Tillabéri border region tensions trigger secondary displacements",
+            "Severe flooding damages mud-brick housing and crops along River Niger",
+            "Sanctions easing restores limited cross-border medical imports"
+        ],
+        "tone_range": (-5.8, -2.0),
+        "event_volume_24h": 170,
+        "event_volume_7d": 1100,
+        "reliefweb_reports": [{"id": "rw-ne-01", "title": "Niger Humanitarian Dashboard", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/ner"}],
+        "reliefweb_response_count": 18
+    },
+    {
+        "region": "Nigeria (North-East & Sahel)",
+        "country_code": "NG",
+        "lat": 9.0820,
+        "lon": 8.6753,
+        "gdelt_sample_headlines": [
+            "Insurgent ambushes reported in Lake Chad basin fringe communities",
+            "Banditry and mass abductions in Zamfara and Katsina displace farming hamlets",
+            "Floods submerge Maiduguri city triggering massive public health emergency"
+        ],
+        "tone_range": (-6.9, -2.5),
+        "event_volume_24h": 410,
+        "event_volume_7d": 2400,
+        "reliefweb_reports": [{"id": "rw-ng-01", "title": "Nigeria Humanitarian Overview", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/nga"}],
+        "reliefweb_response_count": 42
+    },
+    {
+        "region": "Chad",
+        "country_code": "TD",
+        "lat": 15.4542,
+        "lon": 18.7322,
+        "gdelt_sample_headlines": [
+            "Over 650,000 Sudanese refugees hosted in eastern provinces under intense water strain",
+            "Torrential rains wash out vital bridge crossings linking Adre to N'Djamena",
+            "Emergency measles vaccination campaigns launched in transit settlement camps"
+        ],
+        "tone_range": (-6.3, -2.1),
+        "event_volume_24h": 190,
+        "event_volume_7d": 1150,
+        "reliefweb_reports": [{"id": "rw-td-01", "title": "Chad Refugee Emergency Update", "source": "UNHCR", "format": "Situation Report", "url": "https://reliefweb.int/country/tcd"}],
+        "reliefweb_response_count": 27
+    },
+    {
+        "region": "Central African Republic",
+        "country_code": "CF",
+        "lat": 6.6111,
+        "lon": 20.9394,
+        "gdelt_sample_headlines": [
+            "Armed group extortion halts commercial supply corridors from Cameroon border",
+            "Inter-ethnic skirmishes reported near diamond mining zones in Ouham",
+            "Funding shortfall jeopardizes basic primary healthcare delivery across rural prefectures"
+        ],
+        "tone_range": (-6.4, -2.3),
+        "event_volume_24h": 120,
+        "event_volume_7d": 840,
+        "reliefweb_reports": [{"id": "rw-cf-01", "title": "CAR Humanitarian Bulletin", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/caf"}],
+        "reliefweb_response_count": 16
+    },
+    {
+        "region": "Mozambique (Cabo Delgado)",
+        "country_code": "MZ",
+        "lat": -18.6657,
+        "lon": 35.5296,
+        "gdelt_sample_headlines": [
+            "Insurgent raids on coastal towns in Cabo Delgado spark coastal canoe evacuations",
+            "Multinational regional forces conduct clearance operations near Palma",
+            "Cholera vaccination scaled up following cyclone-induced infrastructure damage"
+        ],
+        "tone_range": (-6.5, -2.7),
+        "event_volume_24h": 160,
+        "event_volume_7d": 980,
+        "reliefweb_reports": [{"id": "rw-mz-01", "title": "Mozambique Cabo Delgado Flash Update", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/moz"}],
+        "reliefweb_response_count": 21
+    },
+    {
+        "region": "Lebanon",
+        "country_code": "LB",
+        "lat": 33.8547,
+        "lon": 35.8623,
+        "gdelt_sample_headlines": [
+            "Intense airstrikes hit southern suburbs of Beirut and Bekaa Valley",
+            "Over 1.2 million individuals displaced seeking temporary shelter in schools",
+            "Hospitals report extreme shortages of trauma and surgical supply kits"
+        ],
+        "tone_range": (-8.6, -4.5),
+        "event_volume_24h": 1420,
+        "event_volume_7d": 6800,
+        "reliefweb_reports": [{"id": "rw-lb-01", "title": "Lebanon Emergency Flash Appeal", "source": "UN OCHA", "format": "Appeal", "url": "https://reliefweb.int/country/lbn"}],
+        "reliefweb_response_count": 78
+    },
+    {
+        "region": "Iraq",
+        "country_code": "IQ",
+        "lat": 33.2232,
+        "lon": 43.6793,
+        "gdelt_sample_headlines": [
+            "Severe water scarcity in southern marshlands triggers climate migration to Basra",
+            "Militia standoff and drone alerts reported along western desert sectors",
+            "Unexploded ordnance clearance programs continue in Sinjar and Mosul outskirts"
+        ],
+        "tone_range": (-4.9, -1.8),
+        "event_volume_24h": 280,
+        "event_volume_7d": 1950,
+        "reliefweb_reports": [{"id": "rw-iq-01", "title": "Iraq Post-Conflict Transition Report", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/irq"}],
+        "reliefweb_response_count": 36
+    },
+    {
+        "region": "Pakistan (Balochistan & KPK)",
+        "country_code": "PK",
+        "lat": 30.3753,
+        "lon": 69.3451,
+        "gdelt_sample_headlines": [
+            "Coordinated insurgent attacks hit highway checkpoints across Balochistan",
+            "Militant clashes reported along northwestern Afghan border zones",
+            "Relief operations provide winter kits to flood-affected districts in Sindh"
+        ],
+        "tone_range": (-6.8, -2.6),
+        "event_volume_24h": 380,
+        "event_volume_7d": 2100,
+        "reliefweb_reports": [{"id": "rw-pk-01", "title": "Pakistan Emergency Overview", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/pak"}],
+        "reliefweb_response_count": 29
+    },
+    {
+        "region": "Libya",
+        "country_code": "LY",
+        "lat": 26.3351,
+        "lon": 17.2283,
+        "gdelt_sample_headlines": [
+            "Rival military mobilizations around Tripoli raise security alert levels",
+            "Derna dam reconstruction proceeds slowly amidst political division",
+            "Migrant detention center conditions face scrutiny by UN human rights experts"
+        ],
+        "tone_range": (-5.2, -1.9),
+        "event_volume_24h": 160,
+        "event_volume_7d": 1120,
+        "reliefweb_reports": [{"id": "rw-ly-01", "title": "Libya Humanitarian Flash Update", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/lby"}],
+        "reliefweb_response_count": 24
+    },
+    {
+        "region": "Venezuela",
+        "country_code": "VE",
+        "lat": 6.4238,
+        "lon": -66.5897,
+        "gdelt_sample_headlines": [
+            "Economic pressures and political standoff drive continuing regional outward migration",
+            "Public hospital medicine shortages reported in inland provincial capitals",
+            "Humanitarian partners expand school feeding nutrition initiatives"
+        ],
+        "tone_range": (-5.6, -2.1),
+        "event_volume_24h": 340,
+        "event_volume_7d": 2250,
+        "reliefweb_reports": [{"id": "rw-ve-01", "title": "Venezuela Humanitarian Response Update", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/ven"}],
+        "reliefweb_response_count": 32
+    },
+    {
+        "region": "Colombia (Border Crisis)",
+        "country_code": "CO",
+        "lat": 4.5709,
+        "lon": -74.2973,
+        "gdelt_sample_headlines": [
+            "Clashes between dissident factions displace communities in Cauca and Nariño",
+            "Darien Gap transit corridor records high migrant flow amidst jungle perils",
+            "Government peace negotiations face temporary suspension following regional attacks"
+        ],
+        "tone_range": (-5.4, -2.2),
+        "event_volume_24h": 310,
+        "event_volume_7d": 2050,
+        "reliefweb_reports": [{"id": "rw-co-01", "title": "Colombia Humanitarian Needs Overview", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/col"}],
+        "reliefweb_response_count": 45
+    },
+    {
+        "region": "Bangladesh (Cox's Bazar)",
+        "country_code": "BD",
+        "lat": 23.6850,
+        "lon": 90.3563,
+        "gdelt_sample_headlines": [
+            "Cox's Bazar mega-camps face severe cyclone vulnerability and mudslides",
+            "Funding cuts threaten essential monthly food ration allocations for 1 million refugees",
+            "Armed gang violence reported in camps along Teknaf border corridor"
+        ],
+        "tone_range": (-5.9, -2.3),
+        "event_volume_24h": 260,
+        "event_volume_7d": 1780,
+        "reliefweb_reports": [{"id": "rw-bd-01", "title": "Rohingya Refugee Joint Response Plan", "source": "ISCG", "format": "Appeal", "url": "https://reliefweb.int/country/bgd"}],
+        "reliefweb_response_count": 52
+    },
+    {
+        "region": "Papua New Guinea",
+        "country_code": "PG",
+        "lat": -6.314993,
+        "lon": 143.95555,
+        "gdelt_sample_headlines": [
+            "Severe tribal violence escalates in Enga province leaving villages burned",
+            "Massive landslide in Mulitaka isolates Highlands communities from road access",
+            "Humanitarian relief convoys encounter security roadblocks along provincial highways"
+        ],
+        "tone_range": (-6.8, -2.8),
+        "event_volume_24h": 140,
+        "event_volume_7d": 890,
+        "reliefweb_reports": [{"id": "rw-pg-01", "title": "PNG Emergency Response", "source": "UN OCHA", "format": "Situation Report", "url": "https://reliefweb.int/country/png"}],
+        "reliefweb_response_count": 14
+    },
+    {
+        "region": "Armenia / Azerbaijan (Border)",
+        "country_code": "AM",
+        "lat": 40.0691,
+        "lon": 45.0382,
+        "gdelt_sample_headlines": [
+            "Diplomatic negotiations proceed on border delimitation agreements",
+            "Integration programs assist over 100,000 displaced individuals from Karabakh",
+            "Mine clearance operations continue in border agricultural sectors"
+        ],
+        "tone_range": (-4.2, -1.5),
+        "event_volume_24h": 190,
+        "event_volume_7d": 1350,
+        "reliefweb_reports": [{"id": "rw-am-01", "title": "Armenia Refugee Response Plan", "source": "UNHCR", "format": "Appeal", "url": "https://reliefweb.int/country/arm"}],
+        "reliefweb_response_count": 26
     }
 ]
+

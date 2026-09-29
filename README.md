@@ -109,6 +109,51 @@ CrisisPulse is a research-grade, full-stack intelligence platform that bridges t
 
 ---
 
+## Week 3 Milestone: Interactive Intelligence Console & Geospatial Visualization
+
+### Core Deliverables Completed
+1. **Full-Stack Frontend Scaffolding (Vite + React 19 + Vanilla CSS)**:
+   - Built a sleek, research-grade dark intelligence console in `frontend/`.
+   - Utilizes custom design tokens with glassmorphic panels, glowing crisis accents, and typography (`Outfit`, `Inter`, `JetBrains Mono`).
+   - Integrated reverse-proxy in Vite configuration to communicate with the FastAPI backend at `http://127.0.0.1:8000`.
+2. **Interactive Global Crisis Map (Leaflet & CartoDB Dark Matter)**:
+   - Dynamic CartoDB dark basemap rendering 8 core global crisis hotspots.
+   - Animated SVG pulsing markers scaled by 24h media volume and color-coded by crisis archetype.
+   - Visual anomaly detection halos for hotspots flagged by scikit-learn Isolation Forest.
+   - Interactive popups with instant KPI snapshots and deep-dive drawer triggers.
+3. **Hotspot Intelligence Drawer (Deep-Dive Telemetry)**:
+   - Attention-Response Disparity meter displaying the exact mathematical formula decomposition.
+   - Multi-dimensional regional feature vector grid (24h volume, 7d baseline, volume ratio, Goldstein intensity, tone volatility).
+   - Tabbed feeds streaming raw GDELT news events with sentiment tone analysis and UN OCHA ReliefWeb situation reports.
+   - Local watchlist bookmarking functionality.
+4. **Ranked Leaderboard & Anomaly Radar**:
+   - Sortable crisis leaderboard with attention-response gap ranking, search filtering, and comparative disparity bars.
+   - Unsupervised Isolation Forest explanation view breaking down multidimensional outlier triggers.
+   - Real-time dual feed telemetry stream across GDELT and ReliefWeb.
+
+---
+
+## API Reference
+
+### Week 1 Endpoints (Data Layer)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | API status and root navigation |
+| `GET` | `/api/health` | SQLite connectivity and data service health check |
+| `GET` | `/api/gdelt/raw` | Query raw and normalized GDELT news events |
+| `GET` | `/api/reliefweb/raw` | Query raw and normalized UN OCHA ReliefWeb reports |
+| `GET` | `/api/data/aggregated` | Compute and return per-region feature vectors |
+
+### Week 2 Endpoints (Analytics & ML Intelligence Layer)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/analytics/overview` | Full intelligence summary: gap scores, archetypes, and anomalies |
+| `GET` | `/api/analytics/gap-scores` | Ranked list of crisis regions by attention-response gap |
+| `GET` | `/api/analytics/anomalies` | Detected outlier regions via Isolation Forest |
+| `GET` | `/api/analytics/classifications` | Persisted archetype classifications from SQLite |
+
+---
+
 ## Real-world Findings & Known Limitations (Report Section)
 
 1. **GDELT Noise & Rate Limiting**:
@@ -130,14 +175,22 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Run Tests
+### 2. Run Backend Tests
 ```bash
-python -m pytest tests/ -v
+venv/bin/pytest tests/ -v
 ```
 
-### 3. Start Development Server
+### 3. Start Backend Server
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-
 Interactive Swagger documentation is available at `http://localhost:8000/docs`.
+
+### 4. Frontend Setup & Launch
+```bash
+cd frontend
+npm install
+npm run dev
+```
+The CrisisPulse console will be live at `http://localhost:5173`.
+

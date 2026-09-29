@@ -1,0 +1,23 @@
+/* Leaflet Apple Map Tooltip & Marker styles */
+.apple-map-tooltip {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 9999px !important;
+  padding: 2px 8px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #1d1d1f !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+  pointer-events: none;
+}
+
+.apple-map-tooltip::before {
+  border-top-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.leaflet-tile {
+  filter: contrast(102%) brightness(98%);
+}
