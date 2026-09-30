@@ -30,17 +30,17 @@ export const SEED_HOTSPOTS = [
     reliefweb_reports: [
       {
         id: "rw-sd-01",
-        title: "Sudan Humanitarian Response Situation Report No. 34",
+        title: "Sudan Humanitarian Response Situation Report",
         source: "UN OCHA",
         format: "Situation Report",
-        url: "https://reliefweb.int/report/sudan/sudan-humanitarian-response-sitrep-34"
+        url: "https://reliefweb.int/country/sdn"
       },
       {
         id: "rw-sd-02",
-        title: "Sudan 2025 Revised Humanitarian Needs and Response Plan",
+        title: "Sudan Humanitarian Needs and Response Plan",
         source: "UN OCHA",
         format: "Appeal",
-        url: "https://reliefweb.int/report/sudan/sudan-humanitarian-needs-response-plan"
+        url: "https://reliefweb.int/country/sdn"
       }
     ]
   },
@@ -69,10 +69,10 @@ export const SEED_HOTSPOTS = [
     reliefweb_reports: [
       {
         id: "rw-ua-01",
-        title: "Ukraine Humanitarian Response Flash Update #18",
+        title: "Ukraine Humanitarian Response Flash Update",
         source: "UN OCHA",
         format: "Situation Report",
-        url: "https://reliefweb.int/report/ukraine/ukraine-humanitarian-response-flash-update-18"
+        url: "https://reliefweb.int/country/ukr"
       }
     ]
   },
@@ -101,10 +101,10 @@ export const SEED_HOTSPOTS = [
     reliefweb_reports: [
       {
         id: "rw-ps-01",
-        title: "Occupied Palestinian Territory: Hostilities Flash Update #210",
+        title: "Occupied Palestinian Territory: Hostilities Flash Update",
         source: "UN OCHA",
         format: "Situation Report",
-        url: "https://reliefweb.int/report/occupied-palestinian-territory/flash-update-210"
+        url: "https://reliefweb.int/country/pse"
       }
     ]
   },
@@ -135,7 +135,7 @@ export const SEED_HOTSPOTS = [
         title: "DR Congo: Eastern Provinces Emergency Dashboard",
         source: "UN OCHA",
         format: "Situation Report",
-        url: "https://reliefweb.int/report/democratic-republic-congo/eastern-provinces-dashboard"
+        url: "https://reliefweb.int/country/cod"
       }
     ]
   },
@@ -166,7 +166,7 @@ export const SEED_HOTSPOTS = [
         title: "Haiti: Gang Violence and Humanitarian Impact Report",
         source: "UN OCHA",
         format: "Situation Report",
-        url: "https://reliefweb.int/report/haiti/gang-violence-humanitarian-impact"
+        url: "https://reliefweb.int/country/hti"
       }
     ]
   },
@@ -194,10 +194,10 @@ export const SEED_HOTSPOTS = [
     reliefweb_reports: [
       {
         id: "rw-ye-01",
-        title: "Yemen Humanitarian Update Issue 12",
+        title: "Yemen Humanitarian Update",
         source: "UN OCHA",
         format: "Situation Report",
-        url: "https://reliefweb.int/report/yemen/humanitarian-update-12"
+        url: "https://reliefweb.int/country/yem"
       }
     ]
   },
@@ -228,7 +228,7 @@ export const SEED_HOTSPOTS = [
         title: "Myanmar Humanitarian Needs Overview",
         source: "UN OCHA",
         format: "Appeal",
-        url: "https://reliefweb.int/report/myanmar/humanitarian-needs-overview"
+        url: "https://reliefweb.int/country/mmr"
       }
     ]
   },
@@ -256,10 +256,10 @@ export const SEED_HOTSPOTS = [
     reliefweb_reports: [
       {
         id: "rw-sy-01",
-        title: "Syrian Arab Republic: Northwest Cross-Border Situation Report",
+        title: "Syrian Arab Republic: Cross-Border Situation Report",
         source: "UN OCHA",
         format: "Situation Report",
-        url: "https://reliefweb.int/report/syrian-arab-republic/northwest-sitrep"
+        url: "https://reliefweb.int/country/syr"
       }
     ]
   },

@@ -255,7 +255,24 @@ export default function RegionDrawer({
                     <h5 className="feed-title">{art.title}</h5>
                     <div className="feed-footer">
                       <span style={{ fontSize: '0.725rem', color: '#86868b' }}>
-                        {art.seendate ? new Date(art.seendate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent'}
+                        {(() => {
+                          if (!art.seendate) return 'Recent';
+                          try {
+                            // GDELT format: 20260929T210000Z
+                            if (/^\d{8}T\d{6}Z$/.test(art.seendate)) {
+                              const y = art.seendate.slice(0, 4);
+                              const m = art.seendate.slice(4, 6);
+                              const d = art.seendate.slice(6, 8);
+                              const h = art.seendate.slice(9, 11);
+                              const min = art.seendate.slice(11, 13);
+                              return `${y}-${m}-${d} ${h}:${min} UTC`;
+                            }
+                            const d = new Date(art.seendate);
+                            return isNaN(d.getTime()) ? 'Recent' : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                          } catch {
+                            return 'Recent';
+                          }
+                        })()}
                       </span>
                       {art.url && (
                         <a

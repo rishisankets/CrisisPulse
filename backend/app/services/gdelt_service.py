@@ -140,13 +140,15 @@ class GDELTService:
         now_str = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         
         for hotspot in target_hotspots:
+            clean_region = hotspot["region"].split("(")[0].strip()
             for headline in hotspot["gdelt_sample_headlines"]:
                 tone_val = round(random.uniform(*hotspot["tone_range"]), 2)
+                encoded_query = f"{clean_region} {headline}".replace(" ", "+")
                 fallback_list.append({
-                    "url": f"https://www.aljazeera.com/news/{hotspot['region'].lower().replace(' ', '-')}-update",
+                    "url": f"https://news.google.com/search?q={encoded_query}",
                     "title": f"[{hotspot['region']}] {headline}",
                     "seendate": now_str,
-                    "domain": "aljazeera.com",
+                    "domain": "news.google.com",
                     "language": "English",
                     "sourcecountry": hotspot["country_code"],
                     "socialimage": None,

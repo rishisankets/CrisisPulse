@@ -25,17 +25,17 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
         "reliefweb_reports": [
             {
                 "id": "rw-sd-01",
-                "title": "Sudan Humanitarian Response Situation Report No. 34",
+                "title": "Sudan Humanitarian Response Situation Report",
                 "source": "UN OCHA",
                 "format": "Situation Report",
-                "url": "https://reliefweb.int/report/sudan/sudan-humanitarian-response-sitrep-34"
+                "url": "https://reliefweb.int/country/sdn"
             },
             {
                 "id": "rw-sd-02",
-                "title": "Sudan 2025 Revised Humanitarian Needs and Response Plan",
+                "title": "Sudan Humanitarian Needs and Response Plan",
                 "source": "UN OCHA",
                 "format": "Appeal",
-                "url": "https://reliefweb.int/report/sudan/sudan-humanitarian-needs-response-plan"
+                "url": "https://reliefweb.int/country/sdn"
             }
         ],
         "reliefweb_response_count": 38
@@ -61,14 +61,14 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
                 "title": "Ukraine: Humanitarian Impact and Response Update",
                 "source": "UN OCHA",
                 "format": "Situation Report",
-                "url": "https://reliefweb.int/report/ukraine/humanitarian-impact-update"
+                "url": "https://reliefweb.int/country/ukr"
             },
             {
                 "id": "rw-ua-02",
-                "title": "Ukraine Winter Response Plan 2025 Summary",
+                "title": "Ukraine Winter Response Plan Summary",
                 "source": "UNHCR",
                 "format": "Appeal",
-                "url": "https://reliefweb.int/report/ukraine/winter-response-plan"
+                "url": "https://reliefweb.int/country/ukr"
             }
         ],
         "reliefweb_response_count": 142
@@ -91,17 +91,17 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
         "reliefweb_reports": [
             {
                 "id": "rw-ps-01",
-                "title": "Hostilities in the Gaza Strip and Israel - Flash Update",
+                "title": "Occupied Palestinian Territory: Hostilities Flash Update",
                 "source": "UN OCHA",
                 "format": "Flash Appeal",
-                "url": "https://reliefweb.int/report/occupied-palestinian-territory/flash-update"
+                "url": "https://reliefweb.int/country/pse"
             },
             {
                 "id": "rw-ps-02",
                 "title": "Gaza Strip Acute Food Insecurity Analysis - IPC Report",
                 "source": "IPC",
                 "format": "Assessment",
-                "url": "https://reliefweb.int/report/occupied-palestinian-territory/ipc-report"
+                "url": "https://reliefweb.int/country/pse"
             }
         ],
         "reliefweb_response_count": 95
@@ -124,10 +124,10 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
         "reliefweb_reports": [
             {
                 "id": "rw-cd-01",
-                "title": "DR Congo - Humanitarian Situation in North Kivu",
+                "title": "DR Congo - Humanitarian Situation in Eastern Provinces",
                 "source": "UN OCHA",
                 "format": "Situation Report",
-                "url": "https://reliefweb.int/report/democratic-republic-congo/north-kivu-sitrep"
+                "url": "https://reliefweb.int/country/cod"
             }
         ],
         "reliefweb_response_count": 22
@@ -150,10 +150,10 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
         "reliefweb_reports": [
             {
                 "id": "rw-sy-01",
-                "title": "Northwest Syria Humanitarian Situation Report",
+                "title": "Syria Humanitarian Situation Report",
                 "source": "UN OCHA",
                 "format": "Situation Report",
-                "url": "https://reliefweb.int/report/syrian-arab-republic/nw-syria-sitrep"
+                "url": "https://reliefweb.int/country/syr"
             }
         ],
         "reliefweb_response_count": 45
@@ -176,10 +176,10 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
         "reliefweb_reports": [
             {
                 "id": "rw-ye-01",
-                "title": "Yemen Humanitarian Update - Issue 7",
+                "title": "Yemen Humanitarian Update",
                 "source": "UN OCHA",
                 "format": "Situation Report",
-                "url": "https://reliefweb.int/report/yemen/humanitarian-update-issue-7"
+                "url": "https://reliefweb.int/country/yem"
             }
         ],
         "reliefweb_response_count": 29
@@ -202,10 +202,10 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
         "reliefweb_reports": [
             {
                 "id": "rw-mm-01",
-                "title": "Myanmar Humanitarian Update - Flash Update No. 8",
+                "title": "Myanmar Humanitarian Update",
                 "source": "UN OCHA",
                 "format": "Flash Update",
-                "url": "https://reliefweb.int/report/myanmar/myanmar-update-flash-8"
+                "url": "https://reliefweb.int/country/mmr"
             }
         ],
         "reliefweb_response_count": 16
@@ -228,10 +228,10 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
         "reliefweb_reports": [
             {
                 "id": "rw-ht-01",
-                "title": "Haiti: Escalation of Violence Flash Update No. 12",
+                "title": "Haiti: Escalation of Violence Flash Update",
                 "source": "UN OCHA",
                 "format": "Flash Update",
-                "url": "https://reliefweb.int/report/haiti/escalation-violence-flash-12"
+                "url": "https://reliefweb.int/country/hti"
             }
         ],
         "reliefweb_response_count": 14
@@ -257,7 +257,7 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
                 "title": "Somalia Humanitarian Situation Report",
                 "source": "UN OCHA",
                 "format": "Situation Report",
-                "url": "https://reliefweb.int/report/somalia/humanitarian-sitrep"
+                "url": "https://reliefweb.int/country/som"
             }
         ],
         "reliefweb_response_count": 25
@@ -283,7 +283,7 @@ GLOBAL_HOTSPOTS: List[Dict[str, Any]] = [
                 "title": "Afghanistan Humanitarian Needs and Response Overview",
                 "source": "UN OCHA",
                 "format": "Appeal",
-                "url": "https://reliefweb.int/report/afghanistan/humanitarian-needs-overview"
+                "url": "https://reliefweb.int/country/afg"
             }
         ],
         "reliefweb_response_count": 31
