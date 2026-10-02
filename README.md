@@ -133,6 +133,35 @@ CrisisPulse is a research-grade, full-stack intelligence platform that bridges t
 
 ---
 
+## Week 4 Milestone: Advanced Features
+
+### Feature Specification Backlog
+1. **Explainability Panel on Hotspot Classification (ML Interpretability)**:
+   - *Rationale*: Demystify the classification model for academic examiners and researchers, proving it is not an arbitrary black box.
+   - *UX Behavior*: Clicking any region's category badge (e.g. *Neglected Emergency*, *Escalating Hotspot*, *Protracted Crisis*, *Stabilized Response*) expands an interactive Explainability Modal/Drawer.
+   - *Model Attribution*: Visualizes the exact contributing feature drivers (Volume Ratio, Goldstein Tone Trend, Sentiment Volatility, and UN Response Count) against archetype thresholds or cluster centroids.
+   - *Defensibility*: Displays radar / feature contribution breakdown demonstrating why the hotspot fell into its specific operational category.
+
+*(Awaiting remaining features from user...)*
+
+---
+
+## Week 5 Milestone: Personalization, Packaging & Final Capstone Release
+
+### Core Deliverables Planned
+1. **User Authentication & Persistent Watchlists**:
+   - JWT session management, secure user registration and login endpoints.
+   - Synchronized server-side watchlists persisted across sessions in SQLite.
+2. **Historical Time-Series Trend Analysis**:
+   - Multi-timestamp trajectory evaluation of regional disparity gaps over time.
+   - Interactive trend sparklines visualizing widening vs. closing humanitarian gaps.
+3. **Intelligence Dossier Export**:
+   - One-click structured export (CSV / JSON / PDF briefings) for humanitarian researchers.
+4. **Containerization & Deployment Packaging**:
+   - Production Dockerfile and `docker-compose.yml` for unified single-command deployment.
+
+---
+
 ## API Reference
 
 ### Week 1 Endpoints (Data Layer)
