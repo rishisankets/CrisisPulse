@@ -41,17 +41,70 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-sm);
-  background: #ffffff;
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-subtle);
-  transition: transform var(--transition-fast);
+  background: #111418;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  overflow: hidden;
+  padding: 2px;
 }
 
 .brand-icon-wrapper:hover {
-  transform: scale(1.05);
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 4px 12px rgba(242, 95, 76, 0.2);
+}
+
+.crisis-pulse-svg {
+  width: 100%;
+  height: 100%;
+  color: #1e7065;
+}
+
+.cp-globe-backdrop {
+  fill: #11181f;
+}
+
+.cp-globe-grid {
+  opacity: 0.88;
+  transition: opacity 0.2s ease;
+}
+
+.brand-icon-wrapper:hover .cp-globe-grid {
+  opacity: 1;
+}
+
+.cp-pulse-line {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 0;
+  animation: cp-pulse-trace 3.5s ease-in-out infinite;
+}
+
+@keyframes cp-pulse-trace {
+  0%, 100% {
+    filter: drop-shadow(0 0 1px rgba(249, 115, 22, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.85));
+  }
+}
+
+.cp-pulse-node {
+  animation: cp-node-ping 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transform-origin: 90px 50px;
+}
+
+@keyframes cp-node-ping {
+  0%, 100% {
+    r: 4.2px;
+    opacity: 1;
+  }
+  50% {
+    r: 5.5px;
+    opacity: 0.85;
+  }
 }
 
 .brand-title-wrap {
@@ -61,10 +114,17 @@
 }
 
 .brand-title {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.brand-title-pulse {
+  color: #f25f4c;
+  font-weight: 800;
+  margin-left: 1px;
 }
 
 .brand-version {
@@ -72,14 +132,15 @@
   font-weight: 600;
   color: var(--text-muted);
   background: rgba(0, 0, 0, 0.04);
-  padding: 0.15rem 0.4rem;
+  padding: 0.15rem 0.45rem;
   border-radius: var(--radius-pill);
 }
 
 .brand-subtitle {
-  font-size: 0.725rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
-  font-weight: 400;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 /* Apple Segmented Controls (Tabs) */

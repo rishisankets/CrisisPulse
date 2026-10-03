@@ -1,6 +1,8 @@
 import React from 'react';
 import { Activity, ShieldAlert, Radio, RefreshCw, Layers, BarChart3, Database } from 'lucide-react';
 
+import CrisisPulseLogo from './CrisisPulseLogo';
+
 export default function Navbar({
   activeTab,
   setActiveTab,
@@ -14,15 +16,17 @@ export default function Navbar({
       <div className="nav-container">
         {/* Apple Brand Identity */}
         <div className="brand-group">
-          <div className="brand-icon-wrapper">
-            <Radio className="text-accent" size={19} />
+          <div className="brand-icon-wrapper cp-logo-container">
+            <CrisisPulseLogo size={36} />
           </div>
           <div>
             <div className="brand-title-wrap">
-              <h1 className="brand-title">CrisisPulse</h1>
+              <h1 className="brand-title">
+                Crisis<span className="brand-title-pulse">Pulse</span>
+              </h1>
               <span className="brand-version">Preview</span>
             </div>
-            <p className="brand-subtitle">Global Conflict & Humanitarian Disparity Monitor</p>
+            <p className="brand-subtitle">media attention vs. humanitarian response</p>
           </div>
         </div>
 
