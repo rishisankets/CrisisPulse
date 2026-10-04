@@ -82,3 +82,27 @@ class GapScoreRankingItem(BaseModel):
     response_volume: int
     computed_at: str
 
+# Auth Schemas
+class UserRegisterRequest(BaseModel):
+    email: str
+    password: str
+
+class UserLoginRequest(BaseModel):
+    email: str
+    password: str
+
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    created_at: Optional[str] = None
+
+class AuthResponse(BaseModel):
+    token: str
+    user: UserResponse
+
+class WatchlistAddRequest(BaseModel):
+    country_or_crisis: str
+
+class WatchlistResponse(BaseModel):
+    items: List[str]
+
