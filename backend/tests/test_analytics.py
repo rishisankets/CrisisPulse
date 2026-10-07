@@ -128,3 +128,17 @@ def test_process_and_persist(sample_feature_vectors):
     # Verify retrieval
     persisted = engine.get_persisted_classifications()
     assert len(persisted) > 0
+
+def test_explain_classification(sample_feature_vectors):
+    engine = AnalyticsEngine()
+    results = engine.process_and_persist(sample_feature_vectors)
+    assert len(results) > 0
+    first = results[0]
+    assert "explainability" in first
+    expl = first["explainability"]
+    assert "archetype" in expl
+    assert "primary_reason" in expl
+    assert "criteria" in expl
+    assert "feature_drivers" in expl
+    assert len(expl["criteria"]) > 0
+    assert len(expl["feature_drivers"]) == 5

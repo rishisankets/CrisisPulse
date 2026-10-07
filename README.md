@@ -133,16 +133,25 @@ CrisisPulse is a research-grade, full-stack intelligence platform that bridges t
 
 ---
 
-## Week 4 Milestone: Advanced Features
+## Week 4 Milestone: Advanced Features & ML Interpretability
 
-### Feature Specification Backlog
-1. **Explainability Panel on Hotspot Classification (ML Interpretability)**:
-   - *Rationale*: Demystify the classification model for academic examiners and researchers, proving it is not an arbitrary black box.
-   - *UX Behavior*: Clicking any region's category badge (e.g. *Neglected Emergency*, *Escalating Hotspot*, *Protracted Crisis*, *Stabilized Response*) expands an interactive Explainability Modal/Drawer.
-   - *Model Attribution*: Visualizes the exact contributing feature drivers (Volume Ratio, Goldstein Tone Trend, Sentiment Volatility, and UN Response Count) against archetype thresholds or cluster centroids.
-   - *Defensibility*: Displays radar / feature contribution breakdown demonstrating why the hotspot fell into its specific operational category.
-
-*(Awaiting remaining features from user...)*
+### Core Deliverables Completed
+1. **ML Explainability Engine (`AnalyticsEngine.explain_classification`)**:
+   - Produces transparent interpretability breakdowns explaining why any crisis hotspot received its operational archetype (*Neglected Emergency*, *Escalating Hotspot*, *Protracted Crisis*, *Stabilized Response*).
+   - Generates deterministic decision boundary checklists comparing actual values against exact classification thresholds:
+     - Disparity Gap Score ($\ge 6.8$)
+     - UN Response Count deficit ($< 35$ reports)
+     - Media Volume Surge Ratio ($\ge 1.35\times$)
+     - Goldstein Conflict Sentiment Trend ($\le -0.8$ delta)
+     - Humanitarian cushion threshold ($\ge 40$ reports)
+   - Evaluates multivariate outlier drivers for scikit-learn Isolation Forest (`contamination=0.20`).
+2. **Dedicated REST API Endpoint**:
+   - `GET /api/analytics/explain/{region}`: Delivers on-demand interpretability payloads and feature driver vectors.
+   - Enhanced `GET /api/analytics/overview` response schema to embed regional explainability metadata.
+3. **Seamless Frontend Integration (Uncluttered UX)**:
+   - Built [`ExplainabilityPanel.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/ExplainabilityPanel.jsx) integrated directly into [`RegionDrawer.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/RegionDrawer.jsx) under the new **ML Attribution** sub-tab.
+   - Interactive badge triggers across all core views ([`GapScoresTable.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/GapScoresTable.jsx), [`CrisisMap.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/CrisisMap.jsx) popups, and [`AnomalyRadar.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/AnomalyRadar.jsx)) allowing one-click traversal directly into the decision breakdown without any visual screen clutter.
+   - Interactive comparative bar charts contrasting actual regional metrics against dataset cohort baselines.
 
 ---
 
@@ -180,6 +189,11 @@ CrisisPulse is a research-grade, full-stack intelligence platform that bridges t
 | `GET` | `/api/analytics/gap-scores` | Ranked list of crisis regions by attention-response gap |
 | `GET` | `/api/analytics/anomalies` | Detected outlier regions via Isolation Forest |
 | `GET` | `/api/analytics/classifications` | Persisted archetype classifications from SQLite |
+
+### Week 4 Endpoints (ML Interpretability & Explainability)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/analytics/explain/{region}` | Detailed decision boundary traversal, rule checks, and feature driver attribution |
 
 ---
 

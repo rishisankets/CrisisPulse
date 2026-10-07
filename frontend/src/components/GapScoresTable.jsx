@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpDown, Search, Bookmark, BookmarkCheck, ExternalLink, AlertTriangle } from 'lucide-react';
+import { ArrowUpDown, Search, Bookmark, BookmarkCheck, ExternalLink, AlertTriangle, Cpu } from 'lucide-react';
 
 export default function GapScoresTable({
   regions = [],
@@ -153,9 +153,17 @@ export default function GapScoresTable({
                         <div>
                           <strong className="region-cell-name">{item.region}</strong>
                           {item.is_anomaly && (
-                            <span className="anomaly-tiny-badge" title="Statistical outlier detected">
+                            <span
+                              className="anomaly-tiny-badge"
+                              title="Statistical outlier detected — click to inspect ML attribution"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectRegion(item, 'explainability');
+                              }}
+                              style={{ cursor: 'pointer' }}
+                            >
                               <AlertTriangle size={10} />
-                              Outlier
+                              Outlier ↗
                             </span>
                           )}
                         </div>
@@ -181,9 +189,18 @@ export default function GapScoresTable({
                       </div>
                     </td>
                     <td>
-                      <span className={`badge ${getBadgeClass(item.category)}`}>
+                      <button
+                        type="button"
+                        className={`badge ${getBadgeClass(item.category)} badge-interactive`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectRegion(item, 'explainability');
+                        }}
+                        title="Click to inspect ML decision path & feature attribution"
+                      >
                         {item.category}
-                      </span>
+                        <span className="badge-inspect-arrow">↗</span>
+                      </button>
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       {item.media_volume_24h?.toLocaleString()}
@@ -199,6 +216,14 @@ export default function GapScoresTable({
                     </td>
                     <td>
                       <div className="action-buttons-cell" style={{ justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
+                        <button
+                          className="btn btn-icon btn-sm"
+                          onClick={() => onSelectRegion(item, 'explainability')}
+                          title="Inspect ML Decision & Feature Attribution"
+                          aria-label="Explain"
+                        >
+                          <Cpu size={13} style={{ color: '#0071e3' }} />
+                        </button>
                         <button
                           className="btn btn-icon btn-sm"
                           onClick={() => onToggleBookmark(item.region)}

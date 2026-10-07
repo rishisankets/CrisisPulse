@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { X, ExternalLink, Bookmark, BookmarkCheck, TrendingUp, AlertTriangle, Newspaper, FileText, Activity } from 'lucide-react';
+import { X, ExternalLink, Bookmark, BookmarkCheck, TrendingUp, AlertTriangle, Newspaper, FileText, Activity, Cpu, ChevronRight } from 'lucide-react';
 import { fetchCountryFeed } from '../services/api';
+import ExplainabilityPanel from './ExplainabilityPanel';
 
 export default function RegionDrawer({
   region,
   onClose,
   isBookmarked,
-  onToggleBookmark
+  onToggleBookmark,
+  initialSubTab = 'overview'
 }) {
-  const [activeSubTab, setActiveSubTab] = useState('overview');
+  const [activeSubTab, setActiveSubTab] = useState(initialSubTab);
   const [articles, setArticles] = useState([]);
   const [reports, setReports] = useState([]);
   const [feedLoading, setFeedLoading] = useState(false);
+
+  useEffect(() => {
+    if (initialSubTab) {
+      setActiveSubTab(initialSubTab);
+    }
+  }, [initialSubTab, region?.region]);
 
   useEffect(() => {
     if (!region) return;
@@ -86,14 +94,26 @@ export default function RegionDrawer({
 
       {/* Badges Bar */}
       <div className="drawer-badges">
-        <span className={`badge ${getBadgeClass(region.category)}`}>
+        <button
+          className={`badge ${getBadgeClass(region.category)} badge-interactive`}
+          onClick={() => setActiveSubTab('explainability')}
+          title="Click to inspect ML decision path & feature attribution"
+          type="button"
+        >
           {region.category}
-        </span>
+          <span className="badge-inspect-arrow">↗</span>
+        </button>
         {region.is_anomaly && (
-          <span className="badge badge-anomaly">
+          <button
+            className="badge badge-anomaly badge-interactive"
+            onClick={() => setActiveSubTab('explainability')}
+            title="Click to view Isolation Forest anomaly breakdown"
+            type="button"
+          >
             <AlertTriangle size={12} />
             Statistical Outlier
-          </span>
+            <span className="badge-inspect-arrow">↗</span>
+          </button>
         )}
       </div>
 
@@ -105,6 +125,13 @@ export default function RegionDrawer({
         >
           <Activity size={15} />
           <span>Intelligence Metrics</span>
+        </button>
+        <button
+          className={`tab-btn ${activeSubTab === 'explainability' ? 'active' : ''}`}
+          onClick={() => setActiveSubTab('explainability')}
+        >
+          <Cpu size={15} />
+          <span>ML Attribution</span>
         </button>
         <button
           className={`tab-btn ${activeSubTab === 'news' ? 'active' : ''}`}
@@ -230,8 +257,21 @@ export default function RegionDrawer({
                   `${region.region} exhibits robust humanitarian response presence (${region.reliefweb_response_count} appeals/reports) maintaining parity with international news visibility.`
                 )}
               </p>
+
+              <button
+                type="button"
+                className="btn-explain-cta"
+                onClick={() => setActiveSubTab('explainability')}
+              >
+                <span>Inspect ML Decision Tree & Feature Drivers</span>
+                <ChevronRight size={14} />
+              </button>
             </div>
           </div>
+        )}
+
+        {activeSubTab === 'explainability' && (
+          <ExplainabilityPanel region={region} />
         )}
 
         {activeSubTab === 'news' && (

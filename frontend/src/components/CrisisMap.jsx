@@ -166,6 +166,9 @@ export default function CrisisMap({
           <button class="popup-btn" id="inspect-btn-${item.country_code}">
             View Hotspot Dossier &rarr;
           </button>
+          <button class="popup-btn popup-btn-explain" id="explain-btn-${item.country_code}" style="margin-top: 4px; background: rgba(0, 113, 227, 0.08); color: #0071e3; border: 1px solid rgba(0, 113, 227, 0.25);">
+            Inspect ML Attribution &rarr;
+          </button>
         </div>
       `;
 
@@ -174,7 +177,11 @@ export default function CrisisMap({
       circle.on('popupopen', () => {
         const btn = document.getElementById(`inspect-btn-${item.country_code}`);
         if (btn) {
-          btn.onclick = () => onSelectRegion(item);
+          btn.onclick = () => onSelectRegion(item, 'overview');
+        }
+        const explainBtn = document.getElementById(`explain-btn-${item.country_code}`);
+        if (explainBtn) {
+          explainBtn.onclick = () => onSelectRegion(item, 'explainability');
         }
       });
 

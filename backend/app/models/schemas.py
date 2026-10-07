@@ -66,6 +66,7 @@ class RegionAnalyticsItem(BaseModel):
     avg_goldstein: float
     tone_volatility: float
     computed_at: str
+    explainability: Optional[Dict[str, Any]] = None
 
 class AnalyticsOverviewResponse(BaseModel):
     timestamp: str

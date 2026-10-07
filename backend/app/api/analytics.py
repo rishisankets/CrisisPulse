@@ -1,7 +1,7 @@
 from typing import List, Optional
 from datetime import datetime, timezone
 # pyrefly: ignore [missing-import]
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 
 from app.services.gdelt_service import GDELTService
 from app.services.reliefweb_service import ReliefWebService
@@ -67,3 +67,20 @@ async def get_anomalies(
 async def get_classifications():
     """Returns the most recent persisted category assignments and anomaly flags."""
     return analytics_engine.get_persisted_classifications()
+
+@router.get("/explain/{region}")
+async def explain_region_classification(region: str):
+    """Returns full ML interpretability breakdown, decision path, and feature attributions for a given crisis region."""
+    aggregated = await aggregator_service.build_regional_feature_vectors(force_refresh=False)
+    results = analytics_engine.process_and_persist(aggregated.features)
+    matched = next((r for r in results if r["region"].lower() == region.lower() or r["country_code"].lower() == region.lower()), None)
+    if not matched:
+        raise HTTPException(status_code=404, detail=f"Crisis region '{region}' not found")
+    return {
+        "region": matched["region"],
+        "country_code": matched["country_code"],
+        "gap_score": matched["gap_score"],
+        "category": matched["category"],
+        "is_anomaly": matched["is_anomaly"],
+        "explainability": matched["explainability"]
+    }

@@ -110,11 +110,153 @@ class AnalyticsEngine:
                 for v in feature_vectors
             }
 
+    def explain_classification(
+        self,
+        vector: RegionFeatureVector,
+        gap_score: float,
+        is_anomaly: bool,
+        cohort_means: Optional[Dict[str, float]] = None
+    ) -> Dict[str, Any]:
+        """Produces transparent interpretability breakdown explaining why a region
+        was assigned its archetype and anomaly status."""
+        archetype = self.classify_hotspot(vector, gap_score)
+
+        criteria = [
+            {
+                "rule_name": "Disparity Gap Threshold (Neglected Emergency)",
+                "metric": "gap_score",
+                "label": "Disparity Gap Score",
+                "actual_value": gap_score,
+                "threshold": 6.8,
+                "operator": ">=",
+                "triggered": gap_score >= 6.8
+            },
+            {
+                "rule_name": "Response Saturation Deficit (Neglected Emergency)",
+                "metric": "reliefweb_response_count",
+                "label": "UN Response Count",
+                "actual_value": vector.reliefweb_response_count,
+                "threshold": 35,
+                "operator": "<",
+                "triggered": vector.reliefweb_response_count < 35
+            },
+            {
+                "rule_name": "24h Media Surge Rate (Escalating Hotspot)",
+                "metric": "volume_ratio",
+                "label": "Media Volume Surge Ratio",
+                "actual_value": round(vector.volume_ratio, 2),
+                "threshold": 1.35,
+                "operator": ">=",
+                "triggered": vector.volume_ratio >= 1.35
+            },
+            {
+                "rule_name": "Conflict Velocity Trend (Escalating Hotspot)",
+                "metric": "goldstein_trend",
+                "label": "Goldstein Sentiment Delta",
+                "actual_value": round(vector.goldstein_trend, 2),
+                "threshold": -0.8,
+                "operator": "<=",
+                "triggered": vector.goldstein_trend <= -0.8
+            },
+            {
+                "rule_name": "Humanitarian Cushion (Stabilized Response)",
+                "metric": "reliefweb_response_count",
+                "label": "UN Humanitarian Operations",
+                "actual_value": vector.reliefweb_response_count,
+                "threshold": 40,
+                "operator": ">=",
+                "triggered": vector.reliefweb_response_count >= 40
+            }
+        ]
+
+        if archetype == "Neglected Emergency":
+            primary_reason = f"Attention-response disparity ({gap_score:.2f} >= 6.8) coincides with critically under-resourced UN presence ({vector.reliefweb_response_count} < 35 reports/appeals)."
+        elif archetype == "Escalating Hotspot":
+            if vector.volume_ratio >= 1.35 and vector.goldstein_trend <= -0.8:
+                primary_reason = f"Dual acute escalation: Media volume accelerated to {vector.volume_ratio:.2f}x alongside sharp conflict escalation (Goldstein delta: {vector.goldstein_trend:.2f})."
+            elif vector.volume_ratio >= 1.35:
+                primary_reason = f"Media coverage surge of {vector.volume_ratio:.2f}x exceeds operational escalation threshold (>= 1.35x)."
+            else:
+                primary_reason = f"Negative conflict sentiment velocity ({vector.goldstein_trend:.2f} <= -0.8) signifies fast-deteriorating ground conditions."
+        elif archetype == "Stabilized Response":
+            primary_reason = f"High humanitarian presence ({vector.reliefweb_response_count} reports >= 40) maintains parity with baseline media attention ({vector.volume_ratio:.2f}x < 1.1x)."
+        else:
+            primary_reason = f"Long-term sustained crisis with baseline reporting volume ({vector.volume_ratio:.2f}x) and steady humanitarian presence ({vector.reliefweb_response_count} reports)."
+
+        # Feature drivers relative to cohort
+        drivers = [
+            {
+                "feature": "Volume Ratio",
+                "value": round(vector.volume_ratio, 2),
+                "baseline": round(cohort_means.get("volume_ratio", 1.0), 2) if cohort_means else 1.0,
+                "unit": "x",
+                "direction": "higher" if vector.volume_ratio > 1.2 else "normal"
+            },
+            {
+                "feature": "Goldstein Intensity",
+                "value": round(vector.avg_goldstein, 2),
+                "baseline": round(cohort_means.get("avg_goldstein", -5.0), 2) if cohort_means else -5.0,
+                "unit": "pts",
+                "direction": "severe" if vector.avg_goldstein < -6.0 else "moderate"
+            },
+            {
+                "feature": "Goldstein Delta (Trend)",
+                "value": round(vector.goldstein_trend, 2),
+                "baseline": round(cohort_means.get("goldstein_trend", 0.0), 2) if cohort_means else 0.0,
+                "unit": "pts",
+                "direction": "deteriorating" if vector.goldstein_trend < -0.5 else "stable"
+            },
+            {
+                "feature": "Tone Volatility",
+                "value": round(vector.tone_volatility, 2),
+                "baseline": round(cohort_means.get("tone_volatility", 2.0), 2) if cohort_means else 2.0,
+                "unit": "σ",
+                "direction": "high" if vector.tone_volatility > 2.5 else "nominal"
+            },
+            {
+                "feature": "Humanitarian Response Count",
+                "value": vector.reliefweb_response_count,
+                "baseline": int(cohort_means.get("reliefweb_response_count", 45)) if cohort_means else 45,
+                "unit": "reports",
+                "direction": "deficit" if vector.reliefweb_response_count < 30 else "adequate"
+            }
+        ]
+
+        anomaly_reason = None
+        if is_anomaly:
+            divergent = []
+            if vector.volume_ratio > 1.4:
+                divergent.append(f"heightened media surge ({vector.volume_ratio:.2f}x)")
+            if vector.avg_goldstein < -7.0:
+                divergent.append(f"severe conflict intensity ({vector.avg_goldstein:.1f})")
+            if vector.tone_volatility > 2.5:
+                divergent.append(f"high sentiment volatility ({vector.tone_volatility:.2f}σ)")
+            if vector.reliefweb_response_count < 25:
+                divergent.append(f"sparse humanitarian documentation ({vector.reliefweb_response_count} reports)")
+            anomaly_reason = f"Multivariate outlier flagged by Isolation Forest (contamination=0.20): Unusual convergence of {', '.join(divergent) if divergent else 'extreme feature divergence'}."
+
+        return {
+            "archetype": archetype,
+            "primary_reason": primary_reason,
+            "is_anomaly": is_anomaly,
+            "anomaly_reason": anomaly_reason,
+            "criteria": criteria,
+            "feature_drivers": drivers
+        }
+
     def process_and_persist(self, feature_vectors: List[RegionFeatureVector]) -> List[Dict[str, Any]]:
         """Computes gap scores, archetypes, and anomaly flags for all regions and writes snapshots to SQLite."""
         anomalies_map = self.detect_anomalies(feature_vectors)
-        results = []
+        results: List[Dict[str, Any]] = []
         now_str = datetime.now(timezone.utc).isoformat()
+
+        cohort_means = {
+            "volume_ratio": float(np.mean([v.volume_ratio for v in feature_vectors])) if feature_vectors else 1.0,
+            "avg_goldstein": float(np.mean([v.avg_goldstein for v in feature_vectors])) if feature_vectors else -5.0,
+            "goldstein_trend": float(np.mean([v.goldstein_trend for v in feature_vectors])) if feature_vectors else 0.0,
+            "tone_volatility": float(np.mean([v.tone_volatility for v in feature_vectors])) if feature_vectors else 2.0,
+            "reliefweb_response_count": float(np.mean([v.reliefweb_response_count for v in feature_vectors])) if feature_vectors else 45.0,
+        }
 
         with get_db_connection() as conn:
             cursor = conn.cursor()
@@ -122,6 +264,7 @@ class AnalyticsEngine:
                 gap = self.calculate_gap_score(v)
                 category = self.classify_hotspot(v, gap)
                 is_anomaly = anomalies_map.get(v.region, False)
+                explainability = self.explain_classification(v, gap, is_anomaly, cohort_means)
 
                 # Persist gap score
                 cursor.execute(
@@ -154,6 +297,7 @@ class AnalyticsEngine:
                     "volume_ratio": v.volume_ratio,
                     "avg_goldstein": v.avg_goldstein,
                     "tone_volatility": v.tone_volatility,
+                    "explainability": explainability,
                     "computed_at": now_str
                 })
 

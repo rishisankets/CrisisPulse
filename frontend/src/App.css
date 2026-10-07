@@ -1444,3 +1444,324 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ----------------------------------------------------
+   Week 4: ML Explainability & Attribution Panel
+---------------------------------------------------- */
+.badge-interactive {
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all var(--transition-fast);
+}
+
+.badge-interactive:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.95);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.badge-inspect-arrow {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  font-weight: 700;
+}
+
+.btn-explain-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 113, 227, 0.06);
+  border: 1px solid rgba(0, 113, 227, 0.18);
+  color: var(--accent-blue);
+  font-size: 0.775rem;
+  font-weight: 600;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  margin-top: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-explain-cta:hover {
+  background: rgba(0, 113, 227, 0.12);
+  border-color: rgba(0, 113, 227, 0.35);
+  transform: translateX(2px);
+}
+
+.explainability-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 2rem;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.explain-header-card {
+  background: #ffffff;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  box-shadow: var(--shadow-card);
+}
+
+.explain-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-blue);
+  background: rgba(0, 113, 227, 0.08);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.5rem;
+}
+
+.explain-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.explain-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 0.85rem;
+}
+
+.explain-primary-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: #fbfbfd;
+  border-left: 3.5px solid var(--accent-blue);
+  border-radius: 4px;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.callout-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.callout-text {
+  flex: 1;
+}
+
+.explain-section {
+  background: #ffffff;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  box-shadow: var(--shadow-card);
+}
+
+.section-header-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.section-header-compact h4 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Rules Checklist */
+.rules-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.rule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: #fbfbfd;
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-fast);
+}
+
+.rule-triggered {
+  border-color: rgba(22, 163, 74, 0.25);
+  background: rgba(22, 163, 74, 0.03);
+}
+
+.rule-inactive {
+  opacity: 0.82;
+}
+
+.rule-status-icon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.rule-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rule-name-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rule-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.rule-chip {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-pill);
+}
+
+.chip-triggered {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+
+.chip-skipped {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-muted);
+}
+
+.rule-formula {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.rule-comparison {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Driver Attribute Bars */
+.driver-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.driver-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.driver-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.775rem;
+}
+
+.driver-feature-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.driver-values {
+  font-size: 0.75rem;
+}
+
+.driver-actual {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.driver-baseline {
+  font-size: 0.72rem;
+}
+
+.driver-track {
+  position: relative;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.driver-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 0.4s ease-out;
+}
+
+.driver-baseline-mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+/* Anomaly Diagnostics */
+.anomaly-diag-box {
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+}
+
+.box-anomaly {
+  background: rgba(147, 51, 234, 0.05);
+  border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.box-nominal {
+  background: rgba(22, 163, 74, 0.04);
+  border: 1px solid rgba(22, 163, 74, 0.18);
+}
+
+.anomaly-diag-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.anomaly-diag-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* Academic Footnote */
+.academic-footnote {
+  background: #fbfbfd;
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.85rem;
+  font-size: 0.725rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+

@@ -14,9 +14,15 @@ export default function App() {
   const [regions, setRegions] = useState(SEED_HOTSPOTS);
   const [stats, setStats] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null);
+  const [drawerTab, setDrawerTab] = useState('overview');
   const [isLive, setIsLive] = useState(false);
   const [health, setHealth] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleSelectRegion = (region, tab = 'overview') => {
+    setSelectedRegion(region);
+    setDrawerTab(tab);
+  };
 
   // Filter states
   const [filterCategory, setFilterCategory] = useState('ALL');
@@ -96,7 +102,7 @@ export default function App() {
             <CrisisMap
               regions={regions}
               selectedRegion={selectedRegion}
-              onSelectRegion={setSelectedRegion}
+              onSelectRegion={handleSelectRegion}
               filterCategory={filterCategory}
               setFilterCategory={setFilterCategory}
               searchQuery={searchQuery}
@@ -112,6 +118,7 @@ export default function App() {
                 onClose={() => setSelectedRegion(null)}
                 isBookmarked={bookmarks.includes(selectedRegion.region)}
                 onToggleBookmark={toggleBookmark}
+                initialSubTab={drawerTab}
               />
             )}
           </div>
@@ -122,7 +129,7 @@ export default function App() {
             <div style={{ flex: 1 }}>
               <GapScoresTable
                 regions={regions}
-                onSelectRegion={setSelectedRegion}
+                onSelectRegion={handleSelectRegion}
                 bookmarks={bookmarks}
                 onToggleBookmark={toggleBookmark}
               />
@@ -134,6 +141,7 @@ export default function App() {
                 onClose={() => setSelectedRegion(null)}
                 isBookmarked={bookmarks.includes(selectedRegion.region)}
                 onToggleBookmark={toggleBookmark}
+                initialSubTab={drawerTab}
               />
             )}
           </div>
@@ -144,9 +152,7 @@ export default function App() {
             <div style={{ flex: 1 }}>
               <AnomalyRadar
                 regions={regions}
-                onSelectRegion={(reg) => {
-                  setSelectedRegion(reg);
-                }}
+                onSelectRegion={(reg, tab) => handleSelectRegion(reg, tab || 'explainability')}
               />
             </div>
 
@@ -156,6 +162,7 @@ export default function App() {
                 onClose={() => setSelectedRegion(null)}
                 isBookmarked={bookmarks.includes(selectedRegion.region)}
                 onToggleBookmark={toggleBookmark}
+                initialSubTab={drawerTab}
               />
             )}
           </div>

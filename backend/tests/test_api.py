@@ -99,3 +99,16 @@ async def test_classifications_endpoint():
         data = response.json()
         assert isinstance(data, list)
 
+@pytest.mark.asyncio
+async def test_explain_endpoint():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.get("/api/analytics/explain/Sudan")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["region"] == "Sudan"
+        assert "explainability" in data
+        assert "primary_reason" in data["explainability"]
+        assert "feature_drivers" in data["explainability"]
+
+

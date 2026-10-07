@@ -98,10 +98,29 @@ export default function AnomalyRadar({
                   Vector divergence: Significant negative conflict sentiment combined with heightened reporting acceleration and lagging response reports.
                 </div>
 
-                <button className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem' }}>
-                  <span>Inspect Intelligence Dossier</span>
-                  <ArrowRight size={14} />
-                </button>
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    style={{ flex: 1, fontSize: '0.8rem', padding: '0.5rem 0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectRegion(item, 'explainability');
+                    }}
+                  >
+                    <Cpu size={14} style={{ color: '#9333ea' }} />
+                    <span>Explain Outlier</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    style={{ flex: 1, fontSize: '0.8rem', padding: '0.5rem 0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
+                    onClick={() => onSelectRegion(item, 'overview')}
+                  >
+                    <span>Dossier</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>

@@ -678,3 +678,113 @@ export async function fetchCountryFeed(regionName, countryCode) {
 
   return { gdeltArticles, reliefwebReports };
 }
+
+export async function fetchExplainability(regionName) {
+  try {
+    const res = await fetch(`${API_BASE}/analytics/explain/${encodeURIComponent(regionName)}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.explainability || null;
+    }
+  } catch (err) {
+    console.warn(`Explainability fetch failed for ${regionName}:`, err);
+  }
+  return null;
+}
+
+export function getRegionExplainability(region) {
+  if (region?.explainability) return region.explainability;
+
+  const gap_score = region?.gap_score ?? 0;
+  const vol_ratio = region?.volume_ratio ?? 1.0;
+  const goldstein_trend = region?.goldstein_trend ?? 0.0;
+  const reliefweb_response_count = region?.reliefweb_response_count ?? 0;
+  const avg_goldstein = region?.avg_goldstein ?? -5.0;
+  const tone_volatility = region?.tone_volatility ?? 2.0;
+  const is_anomaly = Boolean(region?.is_anomaly);
+  const archetype = region?.category || 'Protracted Crisis';
+
+  const criteria = [
+    {
+      rule_name: "Disparity Gap Threshold (Neglected Emergency)",
+      metric: "gap_score",
+      label: "Disparity Gap Score",
+      actual_value: gap_score,
+      threshold: 6.8,
+      operator: ">=",
+      triggered: gap_score >= 6.8
+    },
+    {
+      rule_name: "Response Saturation Deficit (Neglected Emergency)",
+      metric: "reliefweb_response_count",
+      label: "UN Response Count",
+      actual_value: reliefweb_response_count,
+      threshold: 35,
+      operator: "<",
+      triggered: reliefweb_response_count < 35
+    },
+    {
+      rule_name: "24h Media Surge Rate (Escalating Hotspot)",
+      metric: "volume_ratio",
+      label: "Media Volume Surge Ratio",
+      actual_value: Number(vol_ratio.toFixed(2)),
+      threshold: 1.35,
+      operator: ">=",
+      triggered: vol_ratio >= 1.35
+    },
+    {
+      rule_name: "Conflict Velocity Trend (Escalating Hotspot)",
+      metric: "goldstein_trend",
+      label: "Goldstein Sentiment Delta",
+      actual_value: Number(goldstein_trend.toFixed(2)),
+      threshold: -0.8,
+      operator: "<=",
+      triggered: goldstein_trend <= -0.8
+    },
+    {
+      rule_name: "Humanitarian Cushion (Stabilized Response)",
+      metric: "reliefweb_response_count",
+      label: "UN Humanitarian Operations",
+      actual_value: reliefweb_response_count,
+      threshold: 40,
+      operator: ">=",
+      triggered: reliefweb_response_count >= 40
+    }
+  ];
+
+  let primary_reason = "";
+  if (archetype === "Neglected Emergency") {
+    primary_reason = `Attention-response disparity (${gap_score.toFixed(2)} >= 6.8) coincides with critically under-resourced UN presence (${reliefweb_response_count} < 35 reports/appeals).`;
+  } else if (archetype === "Escalating Hotspot") {
+    primary_reason = vol_ratio >= 1.35
+      ? `Media coverage surge of ${vol_ratio.toFixed(2)}x exceeds operational escalation threshold (>= 1.35x).`
+      : `Negative conflict sentiment velocity (${goldstein_trend.toFixed(2)} <= -0.8) signifies fast-deteriorating ground conditions.`;
+  } else if (archetype === "Stabilized Response") {
+    primary_reason = `High humanitarian presence (${reliefweb_response_count} reports >= 40) maintains parity with baseline media attention (${vol_ratio.toFixed(2)}x < 1.1x).`;
+  } else {
+    primary_reason = `Long-term sustained crisis with baseline reporting volume (${vol_ratio.toFixed(2)}x) and steady humanitarian presence (${reliefweb_response_count} reports).`;
+  }
+
+  const drivers = [
+    { feature: "Volume Ratio", value: Number(vol_ratio.toFixed(2)), baseline: 1.25, unit: "x", direction: vol_ratio > 1.3 ? "higher" : "normal" },
+    { feature: "Goldstein Intensity", value: Number(avg_goldstein.toFixed(1)), baseline: -5.5, unit: "pts", direction: avg_goldstein < -6.5 ? "severe" : "moderate" },
+    { feature: "Goldstein Delta (Trend)", value: Number(goldstein_trend.toFixed(2)), baseline: -0.2, unit: "pts", direction: goldstein_trend < -0.5 ? "deteriorating" : "stable" },
+    { feature: "Tone Volatility", value: Number(tone_volatility.toFixed(2)), baseline: 2.2, unit: "σ", direction: tone_volatility > 2.8 ? "high" : "nominal" },
+    { feature: "Humanitarian Response Count", value: reliefweb_response_count, baseline: 45, unit: "reports", direction: reliefweb_response_count < 30 ? "deficit" : "adequate" }
+  ];
+
+  let anomaly_reason = null;
+  if (is_anomaly) {
+    anomaly_reason = "Multivariate outlier flagged by Isolation Forest (contamination=0.20): Divergent combination of accelerated reporting volume and severe negative sentiment variance.";
+  }
+
+  return {
+    archetype,
+    primary_reason,
+    is_anomaly,
+    anomaly_reason,
+    criteria,
+    feature_drivers: drivers
+  };
+}
+
