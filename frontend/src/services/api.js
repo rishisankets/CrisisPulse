@@ -788,3 +788,184 @@ export function getRegionExplainability(region) {
   };
 }
 
+// --- Week 5: Time-Series Trends ---
+export async function fetchRegionTrends(regionName) {
+  try {
+    const res = await fetch(`${API_BASE}/analytics/trends/${encodeURIComponent(regionName)}`);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn(`Trends fetch failed for ${regionName}:`, err);
+  }
+
+  // Graceful fallback trend computation
+  const seed = SEED_HOTSPOTS.find(s => s.region.toLowerCase() === regionName.toLowerCase());
+  const gap = seed ? seed.gap_score : 5.0;
+  const vol = seed ? seed.media_volume_24h : 300;
+  const resp = seed ? seed.reliefweb_response_count : 30;
+  const drift = (seed?.volume_ratio || 1.0) > 1.3 ? 0.35 : ((seed?.volume_ratio || 1.0) < 0.9 ? -0.25 : 0.05);
+  
+  const history = [24, 18, 12, 6, 0].map(h => {
+    const f = h / 24;
+    return {
+      timestamp: new Date(Date.now() - h * 3600000).toISOString(),
+      gap_score: Number(Math.max(0.5, Math.min(9.9, gap - drift * f)).toFixed(2)),
+      media_volume: Math.max(10, Math.round(vol * (1 - 0.2 * f))),
+      response_volume: resp
+    };
+  });
+
+  const delta = Number((history[history.length - 1].gap_score - history[0].gap_score).toFixed(2));
+  return {
+    region: regionName,
+    current_gap_score: gap,
+    trajectory: delta >= 0.3 ? "widening" : (delta <= -0.3 ? "closing" : "stable"),
+    delta_24h: delta,
+    history
+  };
+}
+
+// --- Week 5: Auth & Persistent Watchlists ---
+export function getStoredAuth() {
+  try {
+    const token = localStorage.getItem('crisispulse_token');
+    const user = localStorage.getItem('crisispulse_user');
+    return { token, user: user ? JSON.parse(user) : null };
+  } catch {
+    return { token: null, user: null };
+  }
+}
+
+export function saveStoredAuth(token, user) {
+  try {
+    if (token) localStorage.setItem('crisispulse_token', token);
+    if (user) localStorage.setItem('crisispulse_user', JSON.stringify(user));
+  } catch (e) {
+    console.warn('Failed saving auth to storage', e);
+  }
+}
+
+export function clearStoredAuth() {
+  try {
+    localStorage.removeItem('crisispulse_token');
+    localStorage.removeItem('crisispulse_user');
+  } catch (e) {
+    console.warn('Failed clearing auth', e);
+  }
+}
+
+export async function registerUser(email, password) {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || 'Registration failed');
+  }
+  const data = await res.json();
+  saveStoredAuth(data.token, data.user);
+  return data;
+}
+
+export async function loginUser(email, password) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || 'Login failed');
+  }
+  const data = await res.json();
+  saveStoredAuth(data.token, data.user);
+  return data;
+}
+
+export async function fetchCurrentUser() {
+  const { token } = getStoredAuth();
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.warn('Failed to verify current user:', e);
+  }
+  return null;
+}
+
+export async function fetchServerWatchlist() {
+  const { token } = getStoredAuth();
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_BASE}/watchlists`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.items || [];
+    }
+  } catch (e) {
+    console.warn('Failed to fetch server watchlist:', e);
+  }
+  return null;
+}
+
+export async function addServerWatchlist(regionName) {
+  const { token } = getStoredAuth();
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_BASE}/watchlists`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ country_or_crisis: regionName })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.items;
+    }
+  } catch (e) {
+    console.warn('Failed to add to server watchlist:', e);
+  }
+  return null;
+}
+
+export async function removeServerWatchlist(regionName) {
+  const { token } = getStoredAuth();
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_BASE}/watchlists/${encodeURIComponent(regionName)}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.items;
+    }
+  } catch (e) {
+    console.warn('Failed to remove from server watchlist:', e);
+  }
+  return null;
+}
+
+// --- Week 5: Dossier Export Helpers ---
+export function triggerDossierDownload(format = 'csv') {
+  const url = format === 'csv' ? `${API_BASE}/analytics/export/csv` : `${API_BASE}/analytics/export/json`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `crisispulse_intelligence_dossier.${format}`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowUpDown, Search, Bookmark, BookmarkCheck, ExternalLink, AlertTriangle, Cpu } from 'lucide-react';
+import TrendSparkline from './TrendSparkline';
 
 export default function GapScoresTable({
   regions = [],
@@ -98,6 +99,7 @@ export default function GapScoresTable({
                   <ArrowUpDown size={12} />
                 </div>
               </th>
+              <th style={{ width: '110px' }}>24h Trajectory</th>
               <th>Classification Archetype</th>
               <th onClick={() => handleSort('media_volume_24h')} style={{ cursor: 'pointer', textAlign: 'right' }}>
                 <div className="th-content" style={{ justifyContent: 'flex-end' }}>
@@ -129,7 +131,7 @@ export default function GapScoresTable({
           <tbody>
             {sorted.length === 0 ? (
               <tr>
-                <td colSpan={9} style={{ textAlign: 'center', padding: '3rem', color: '#86868b' }}>
+                <td colSpan={10} style={{ textAlign: 'center', padding: '3rem', color: '#86868b' }}>
                   No crisis hotspots match your search.
                 </td>
               </tr>
@@ -187,6 +189,9 @@ export default function GapScoresTable({
                           />
                         </div>
                       </div>
+                    </td>
+                    <td>
+                      <TrendSparkline regionName={item.region} compact={true} />
                     </td>
                     <td>
                       <button

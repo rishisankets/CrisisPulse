@@ -1,10 +1,11 @@
 import sqlite3
 import json
 import logging
+import uuid
 from datetime import datetime, timezone, timedelta
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Optional, Any, Generator
+from typing import Optional, Any, Generator, List, Dict
 
 from app.config import settings
 
@@ -185,4 +186,84 @@ def get_latest_gap_scores() -> list[dict]:
             ) latest ON g.region = latest.region AND g.computed_at = latest.max_computed
             ORDER BY g.gap_score DESC
         """)
+        return [dict(row) for row in cursor.fetchall()]
+
+# --- User & Watchlist Helper Functions ---
+
+def create_user(email: str, password_hash: str) -> Dict[str, Any]:
+    """Creates a new user record in SQLite."""
+    user_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    with get_db_connection() as conn:
+        conn.execute(
+            "INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
+            (user_id, email.lower().strip(), password_hash, now)
+        )
+    return {"id": user_id, "email": email.lower().strip(), "created_at": now}
+
+def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
+    """Retrieves user row by email."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, email, password_hash, created_at FROM users WHERE email = ?", (email.lower().strip(),))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
+    """Retrieves user row by ID."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, email, password_hash, created_at FROM users WHERE id = ?", (user_id,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+def get_user_watchlist(user_id: str) -> List[str]:
+    """Retrieves list of bookmarked countries/crises for a user."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT country_or_crisis FROM watchlists WHERE user_id = ? ORDER BY added_at DESC",
+            (user_id,)
+        )
+        return [row["country_or_crisis"] for row in cursor.fetchall()]
+
+def add_to_watchlist(user_id: str, country_or_crisis: str) -> bool:
+    """Adds a country or crisis to user's persistent watchlist if not already present."""
+    entry_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT 1 FROM watchlists WHERE user_id = ? AND country_or_crisis = ?",
+            (user_id, country_or_crisis)
+        )
+        if cursor.fetchone():
+            return False
+        cursor.execute(
+            "INSERT INTO watchlists (id, user_id, country_or_crisis, added_at) VALUES (?, ?, ?, ?)",
+            (entry_id, user_id, country_or_crisis, now)
+        )
+        return True
+
+def remove_from_watchlist(user_id: str, country_or_crisis: str) -> bool:
+    """Removes a country or crisis from user's watchlist."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "DELETE FROM watchlists WHERE user_id = ? AND country_or_crisis = ?",
+            (user_id, country_or_crisis)
+        )
+        return cursor.rowcount > 0
+
+def get_historical_gap_scores(region: str, limit: int = 20) -> List[Dict[str, Any]]:
+    """Retrieves historical gap score snapshots for a region ordered by computed_at ASC."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT region, gap_score, media_volume, response_volume, computed_at
+            FROM gap_score_cache
+            WHERE region = ?
+            ORDER BY computed_at ASC
+            LIMIT ?
+        """, (region, limit))
         return [dict(row) for row in cursor.fetchall()]

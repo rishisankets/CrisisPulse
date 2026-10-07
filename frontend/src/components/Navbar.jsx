@@ -1,7 +1,8 @@
-import React from 'react';
-import { Activity, ShieldAlert, Radio, RefreshCw, Layers, BarChart3, Database } from 'lucide-react';
+import React, { useState } from 'react';
+import { Activity, ShieldAlert, Radio, RefreshCw, Layers, BarChart3, Database, Download, User, LogOut, ChevronDown, FileSpreadsheet, FileCode } from 'lucide-react';
 
 import CrisisPulseLogo from './CrisisPulseLogo';
+import { triggerDossierDownload } from '../services/api';
 
 export default function Navbar({
   activeTab,
@@ -9,12 +10,17 @@ export default function Navbar({
   isLive,
   health,
   onRefresh,
-  isLoading
+  isLoading,
+  currentUser,
+  onOpenAuth,
+  onLogout
 }) {
+  const [showExportMenu, setShowExportMenu] = useState(false);
+
   return (
     <header className="header-nav">
       <div className="nav-container">
-        {/* Apple Brand Identity */}
+        {/* Brand Identity */}
         <div className="brand-group">
           <div className="brand-icon-wrapper cp-logo-container">
             <CrisisPulseLogo size={36} />
@@ -30,7 +36,7 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Apple Segmented Controls */}
+        {/* Segmented Controls */}
         <nav className="nav-tabs" role="tablist">
           <button
             role="tab"
@@ -70,8 +76,71 @@ export default function Navbar({
           </button>
         </nav>
 
-        {/* Status & Refresh Action */}
+        {/* Status, Export & User Auth Controls */}
         <div className="nav-controls">
+          {/* Export Dossier Dropdown */}
+          <div className="export-menu-container">
+            <button
+              className="btn btn-secondary export-nav-btn"
+              onClick={() => setShowExportMenu(!showExportMenu)}
+              title="Download Crisis Dossier Report"
+            >
+              <Download size={14} />
+              <span>Export</span>
+              <ChevronDown size={12} />
+            </button>
+            {showExportMenu && (
+              <div className="export-dropdown-menu" onClick={() => setShowExportMenu(false)}>
+                <button
+                  className="export-dropdown-item"
+                  onClick={() => triggerDossierDownload('csv')}
+                >
+                  <FileSpreadsheet size={14} className="export-item-icon csv" />
+                  <div>
+                    <div className="export-item-title">CSV Spreadsheet</div>
+                    <div className="export-item-desc">For Excel, R & Python data pipelines</div>
+                  </div>
+                </button>
+                <button
+                  className="export-dropdown-item"
+                  onClick={() => triggerDossierDownload('json')}
+                >
+                  <FileCode size={14} className="export-item-icon json" />
+                  <div>
+                    <div className="export-item-title">JSON Intelligence Snapshot</div>
+                    <div className="export-item-desc">Complete payload with ML attributions</div>
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* User Auth Chip */}
+          {currentUser ? (
+            <div className="user-profile-chip" title={`Logged in as ${currentUser.email}`}>
+              <div className="user-avatar-dot" />
+              <span className="user-email-text">{currentUser.email.split('@')[0]}</span>
+              <button
+                className="user-logout-btn"
+                onClick={onLogout}
+                title="Log out of session"
+                aria-label="Log out"
+              >
+                <LogOut size={13} />
+              </button>
+            </div>
+          ) : (
+            <button
+              className="btn btn-secondary auth-nav-btn"
+              onClick={onOpenAuth}
+              title="Sign in to sync saved watchlists"
+            >
+              <User size={14} />
+              <span>Sign In</span>
+            </button>
+          )}
+
+          {/* Status Pill */}
           <div className="status-pill" title={isLive ? "FastAPI Backend & SQLite WAL Active" : "Offline mode — Verified seed intelligence"}>
             <span className={`status-dot ${isLive ? 'online' : 'offline'}`} />
             <span className="status-label">
@@ -79,6 +148,7 @@ export default function Navbar({
             </span>
           </div>
 
+          {/* Refresh Action */}
           <button
             className="btn btn-icon refresh-btn"
             onClick={onRefresh}
@@ -93,3 +163,4 @@ export default function Navbar({
     </header>
   );
 }
+

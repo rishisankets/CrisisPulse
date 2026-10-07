@@ -6,7 +6,18 @@ import RegionDrawer from './components/RegionDrawer';
 import GapScoresTable from './components/GapScoresTable';
 import AnomalyRadar from './components/AnomalyRadar';
 import RawFeedsView from './components/RawFeedsView';
-import { fetchAnalyticsOverview, fetchHealth, SEED_HOTSPOTS } from './services/api';
+import AuthModal from './components/AuthModal';
+import {
+  fetchAnalyticsOverview,
+  fetchHealth,
+  SEED_HOTSPOTS,
+  getStoredAuth,
+  clearStoredAuth,
+  fetchCurrentUser,
+  fetchServerWatchlist,
+  addServerWatchlist,
+  removeServerWatchlist
+} from './services/api';
 import './App.css';
 
 export default function App() {
@@ -19,6 +30,10 @@ export default function App() {
   const [health, setHealth] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // User Auth & Modal States
+  const [currentUser, setCurrentUser] = useState(() => getStoredAuth().user);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   const handleSelectRegion = (region, tab = 'overview') => {
     setSelectedRegion(region);
     setDrawerTab(tab);
@@ -29,7 +44,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showOnlyAnomalies, setShowOnlyAnomalies] = useState(false);
 
-  // Watchlist stored in localStorage
+  // Watchlist stored in localStorage + synced with server if logged in
   const [bookmarks, setBookmarks] = useState(() => {
     try {
       const saved = localStorage.getItem('crisispulse_bookmarks');
@@ -38,6 +53,32 @@ export default function App() {
       return ['Sudan', 'Gaza / Palestine'];
     }
   });
+
+  // Verify auth session & sync server watchlists
+  useEffect(() => {
+    async function initAuth() {
+      const user = await fetchCurrentUser();
+      if (user) {
+        setCurrentUser(user);
+        const serverItems = await fetchServerWatchlist();
+        if (serverItems && serverItems.length > 0) {
+          setBookmarks(serverItems);
+          try {
+            localStorage.setItem('crisispulse_bookmarks', JSON.stringify(serverItems));
+          } catch (e) {
+            console.warn(e);
+          }
+        }
+      } else {
+        const stored = getStoredAuth();
+        if (stored.token) {
+          clearStoredAuth();
+          setCurrentUser(null);
+        }
+      }
+    }
+    initAuth();
+  }, []);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -65,18 +106,45 @@ export default function App() {
     loadData();
   }, [loadData]);
 
-  const toggleBookmark = (regionName) => {
-    setBookmarks(prev => {
-      const next = prev.includes(regionName)
-        ? prev.filter(r => r !== regionName)
-        : [...prev, regionName];
-      try {
-        localStorage.setItem('crisispulse_bookmarks', JSON.stringify(next));
-      } catch (e) {
-        console.warn('Could not persist watchlist to localStorage', e);
+  const toggleBookmark = async (regionName) => {
+    const isCurrentlyBookmarked = bookmarks.includes(regionName);
+    const next = isCurrentlyBookmarked
+      ? bookmarks.filter(r => r !== regionName)
+      : [...bookmarks, regionName];
+
+    setBookmarks(next);
+    try {
+      localStorage.setItem('crisispulse_bookmarks', JSON.stringify(next));
+    } catch (e) {
+      console.warn('Could not persist watchlist to localStorage', e);
+    }
+
+    if (currentUser) {
+      if (isCurrentlyBookmarked) {
+        await removeServerWatchlist(regionName);
+      } else {
+        await addServerWatchlist(regionName);
       }
-      return next;
-    });
+    }
+  };
+
+  const handleAuthSuccess = async (user) => {
+    setCurrentUser(user);
+    const serverItems = await fetchServerWatchlist();
+    if (serverItems && serverItems.length > 0) {
+      setBookmarks(serverItems);
+      localStorage.setItem('crisispulse_bookmarks', JSON.stringify(serverItems));
+    } else {
+      // Sync local bookmarks to server
+      for (const item of bookmarks) {
+        await addServerWatchlist(item);
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    clearStoredAuth();
+    setCurrentUser(null);
   };
 
   return (
@@ -89,6 +157,9 @@ export default function App() {
         health={health}
         onRefresh={loadData}
         isLoading={isLoading}
+        currentUser={currentUser}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onLogout={handleLogout}
       />
 
       {/* Main Container */}
@@ -172,6 +243,14 @@ export default function App() {
           <RawFeedsView regions={regions} />
         )}
       </main>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+      />
     </div>
   );
 }
+

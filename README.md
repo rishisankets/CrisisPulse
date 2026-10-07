@@ -155,19 +155,22 @@ CrisisPulse is a research-grade, full-stack intelligence platform that bridges t
 
 ---
 
-## Week 5 Milestone: Personalization, Packaging & Final Capstone Release
+## Week 5 Milestone: Personalization, Reporting & Final Capstone Release
 
-### Core Deliverables Planned
-1. **User Authentication & Persistent Watchlists**:
-   - JWT session management, secure user registration and login endpoints.
-   - Synchronized server-side watchlists persisted across sessions in SQLite.
-2. **Historical Time-Series Trend Analysis**:
-   - Multi-timestamp trajectory evaluation of regional disparity gaps over time.
-   - Interactive trend sparklines visualizing widening vs. closing humanitarian gaps.
-3. **Intelligence Dossier Export**:
-   - One-click structured export (CSV / JSON / PDF briefings) for humanitarian researchers.
-4. **Containerization & Deployment Packaging**:
-   - Production Dockerfile and `docker-compose.yml` for unified single-command deployment.
+### Core Deliverables Completed
+1. **User Authentication & Persistent Server Watchlists**:
+   - Built [`auth_service.py`](file:///Users/rishisanketseelam/Project_3rdyear/backend/app/services/auth_service.py) with `bcrypt` password hashing and secure JWT session token generation/verification.
+   - Built [`auth.py`](file:///Users/rishisanketseelam/Project_3rdyear/backend/app/api/auth.py) exposing `/api/auth/register`, `/api/auth/login`, and `/api/auth/me`.
+   - Exposed persistent `/api/watchlists` (GET, POST, DELETE) syncing tracked crises directly to SQLite `watchlists` table.
+   - Built [`AuthModal.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/AuthModal.jsx) with instant Sign In / Register tabs and user profile avatar chip in [`Navbar.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/Navbar.jsx).
+2. **Historical Time-Series Trend Analysis & Trajectory Sparklines**:
+   - Implemented `GET /api/analytics/trends/{region}` calculating 24h gap trajectory (`widening`, `closing`, `stable`) and historical score checkpoints.
+   - Built [`TrendSparkline.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/TrendSparkline.jsx) embedding interactive SVG trajectory sparklines directly in [`GapScoresTable.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/GapScoresTable.jsx) and [`RegionDrawer.jsx`](file:///Users/rishisanketseelam/Project_3rdyear/frontend/src/components/RegionDrawer.jsx).
+3. **One-Click Intelligence Dossier Export**:
+   - Backend streaming endpoints: `GET /api/analytics/export/csv` (RFC 4180 spreadsheet) and `GET /api/analytics/export/json` (full intelligence snapshot).
+   - Sleek Export dropdown in the Navbar and dedicated Region Dossier download button in the telemetry drawer.
+4. **Unified Local Dev Runner (`start.sh`)**:
+   - Created root [`start.sh`](file:///Users/rishisanketseelam/Project_3rdyear/start.sh) to boot both the FastAPI backend and Vite frontend concurrently with clean exit signal handling.
 
 ---
 
@@ -194,6 +197,19 @@ CrisisPulse is a research-grade, full-stack intelligence platform that bridges t
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/api/analytics/explain/{region}` | Detailed decision boundary traversal, rule checks, and feature driver attribution |
+
+### Week 5 Endpoints (Auth, Watchlists, Trends & Export)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register user account with bcrypt password hashing and JWT issuance |
+| `POST` | `/api/auth/login` | Authenticate user credentials and return signed JWT token |
+| `GET` | `/api/auth/me` | Retrieve currently authenticated user profile |
+| `GET` | `/api/watchlists` | Get bookmarked crisis regions for authenticated user from SQLite |
+| `POST` | `/api/watchlists` | Add a crisis region to user's persistent watchlist |
+| `DELETE` | `/api/watchlists/{region}` | Remove a crisis region from user's watchlist |
+| `GET` | `/api/analytics/trends/{region}` | Multi-point 24h gap trajectory and time-series history |
+| `GET` | `/api/analytics/export/csv` | Download complete crisis intelligence dossier as CSV |
+| `GET` | `/api/analytics/export/json` | Download complete crisis intelligence snapshot as JSON |
 
 ---
 

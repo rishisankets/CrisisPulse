@@ -107,3 +107,17 @@ class WatchlistAddRequest(BaseModel):
 class WatchlistResponse(BaseModel):
     items: List[str]
 
+# Trend Schemas
+class TrendPoint(BaseModel):
+    timestamp: str
+    gap_score: float
+    media_volume: int
+    response_volume: int
+
+class RegionTrendResponse(BaseModel):
+    region: str
+    current_gap_score: float
+    trajectory: str
+    delta_24h: float
+    history: List[TrendPoint]
+

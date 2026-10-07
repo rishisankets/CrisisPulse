@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, ExternalLink, Bookmark, BookmarkCheck, TrendingUp, AlertTriangle, Newspaper, FileText, Activity, Cpu, ChevronRight } from 'lucide-react';
+import { X, ExternalLink, Bookmark, BookmarkCheck, TrendingUp, AlertTriangle, Newspaper, FileText, Activity, Cpu, ChevronRight, Download } from 'lucide-react';
 import { fetchCountryFeed } from '../services/api';
 import ExplainabilityPanel from './ExplainabilityPanel';
+import TrendSparkline from './TrendSparkline';
 
 export default function RegionDrawer({
   region,
@@ -58,6 +59,25 @@ export default function RegionDrawer({
 
   const gapPercent = Math.min(100, Math.round((region.gap_score / 10) * 100));
 
+  const handleExportRegionDossier = () => {
+    const payload = {
+      title: `CrisisPulse Hotspot Dossier: ${region.region}`,
+      exported_at: new Date().toISOString(),
+      region_telemetry: region,
+      sample_headlines: articles.slice(0, 5),
+      un_reports: reports.slice(0, 5)
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `crisispulse_${region.region.toLowerCase().replace(/[^a-z0-9]/g, '_')}_dossier.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <aside className="region-drawer" aria-label="Hotspot Intelligence Dossier">
       {/* Drawer Header */}
@@ -73,6 +93,14 @@ export default function RegionDrawer({
         </div>
 
         <div className="drawer-header-actions">
+          <button
+            className="btn btn-icon"
+            onClick={handleExportRegionDossier}
+            title="Download Region Dossier (JSON)"
+            aria-label="Download Region Dossier"
+          >
+            <Download size={17} />
+          </button>
           <button
             className={`btn btn-icon ${isBookmarked ? 'btn-bookmarked' : ''}`}
             onClick={() => onToggleBookmark(region.region)}
@@ -185,6 +213,9 @@ export default function RegionDrawer({
                 Quantified disparity: Logarithmic scaling of 24h media volume & surge ratio penalized against active UN OCHA situation reports.
               </div>
             </div>
+
+            {/* 24h Trajectory Sparkline */}
+            <TrendSparkline regionName={region.region} compact={false} />
 
             {/* Feature Vector Grid */}
             <div className="vector-grid">
