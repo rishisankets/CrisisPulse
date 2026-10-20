@@ -107,6 +107,17 @@ CrisisPulse is a research-grade, full-stack intelligence platform that bridges t
 | `GET` | `/api/analytics/anomalies` | Detected outlier regions via Isolation Forest |
 | `GET` | `/api/analytics/classifications` | Persisted archetype classifications from SQLite |
 
+### Week 3 Endpoints (Frontend Proxied via Vite — consumed by React UI)
+| Component | Route Consumed | Description |
+|---|---|---|
+| `CrisisMap.jsx` | `GET /api/analytics/overview` | Powers animated SVG pulsing markers and anomaly halos on Leaflet map |
+| `RegionDrawer.jsx` | `GET /api/analytics/explain/{region}` | Populates deep-dive telemetry drawer with KPI grid and GDELT/ReliefWeb feeds |
+| `GapScoresTable.jsx` | `GET /api/analytics/gap-scores` | Drives sortable crisis leaderboard with disparity bars |
+| `AnomalyRadar.jsx` | `GET /api/analytics/anomalies` | Renders Isolation Forest anomaly radar with outlier explanations |
+| `TrendSparkline.jsx` | `GET /api/analytics/trends/{region}` | Embeds SVG trajectory sparklines in table and drawer |
+| `AuthModal.jsx` | `POST /api/auth/register`, `POST /api/auth/login` | Sign In / Register modal with JWT session handling |
+| `Navbar.jsx` | `GET /api/analytics/export/csv`, `GET /api/analytics/export/json` | Export dropdown for CSV and JSON intelligence dossiers |
+
 ---
 
 ## Week 3 Milestone: Interactive Intelligence Console & Geospatial Visualization
